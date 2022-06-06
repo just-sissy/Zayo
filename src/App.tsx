@@ -1,12 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as _ from 'lodash'
 import './App.css'
 import { Zayo, ZayoProps } from './components/Zayo'
+import { Input } from './components/Input';
 
-const eyes = ['normal', 'glasses', 'cyclops', 'lashes'] as const;
+const eyes = ['normal', 'glasses', 'cyclops', 'lashes', 'uplook', 'serious'] as const;
 export type EyeType = typeof eyes[number];
 
-const mouths = ['smiling', 'smirking', 'chipped'] as const;
+const mouths = ['sneaky', 'smiling', 'smirking', 'chipped', 'beard', 'goatee'] as const;
 export type MouthType = typeof mouths[number]
 
 const bunnyColors = [
@@ -19,14 +20,29 @@ const bunnyColors = [
 export type BunnyColorType = typeof bunnyColors[number];
 
 function App() {
-  const [zayo, setZayo] = useState<ZayoProps>({ bunnyColors: { bodyColor: '#FFAF9F', earColor: '#BA4949', shirtColor: '#0D0000' }, eyeType: 'normal', mouthType: 'chipped' })
+  const [isNext, setIsNext] = useState(false);
+  const [isExplaining, setIsExplaining] = useState(false);
+  const [zayo, setZayo] = useState<ZayoProps>({ bunnyColors: { bodyColor: '#FFAF9F', earColor: '#BA4949', shirtColor: '#0D0000' }, eyeType: 'normal', mouthType: 'chipped', isExplaining, isNext })
+  useEffect(() => {
+    setZayo({ ...zayo, isNext, isExplaining })
+  }, [isNext, isExplaining])
+
   return (
     <div className="App">
       <header className="App-header">
+        {/* <Input /> */}
         <Zayo {...zayo} />
-        <button onClick={() => setZayo({ bunnyColors: _.sample(bunnyColors) as BunnyColorType, eyeType: _.sample(eyes) as EyeType, mouthType: _.sample(mouths) as MouthType })}>
+        <button onClick={() => setZayo({ bunnyColors: _.sample(bunnyColors) as BunnyColorType, eyeType: _.sample(eyes) as EyeType, mouthType: _.sample(mouths) as MouthType, isExplaining, isNext })}>
           random
         </button>
+        <div>
+          isExplaining
+          <input type="checkbox" onChange={() => setIsExplaining(!isExplaining)} />
+        </div>
+        <div>
+          isNext
+          <input type="checkbox" onChange={() => setIsNext(!isNext)} />
+        </div>
       </header>
     </div>
   )
